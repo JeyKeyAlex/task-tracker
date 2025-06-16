@@ -11,6 +11,7 @@ import (
 type Config struct {
 	WebDir string `env:"WEB_DIR,default=./web"`
 	Port   string `env:"TODO_PORT,default=:7540"`
+	DbFile string `env:"TODO_DBFILE,default=./pkg/db/scheduler.db"`
 }
 
 func NewConfig() *Config {
