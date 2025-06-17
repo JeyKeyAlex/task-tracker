@@ -27,7 +27,7 @@ func NewConfig() *Config {
 
 	// Парсим переменные окружения в структуру Config
 	if err := envconfig.Process(ctx, cfg); err != nil {
-		log.Fatalf("Failed to parse env config: %v", err)
+		log.Printf("Failed to parse env config: %v", err)
 	}
 
 	return cfg

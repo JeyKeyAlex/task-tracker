@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/JKasus/go_final_project/pkg/db"
+	"log"
 	"net/http"
 
 	"github.com/JKasus/go_final_project/pkg/config"
@@ -10,9 +10,12 @@ import (
 
 func main() {
 	cfg := config.NewConfig()
-	db.Init(cfg.DbFile)
+	err := db.Init(cfg.DbFile)
+	if err != nil {
+		log.Printf("Failed to init db: %v", err)
+	}
 	http.Handle("/", http.FileServer(http.Dir(cfg.WebDir)))
-	if err := http.ListenAndServe(cfg.Port, nil); err != nil {
-		fmt.Println(err)
+	if err = http.ListenAndServe(cfg.Port, nil); err != nil {
+		log.Printf("Failed to start server: %v", err)
 	}
 }
