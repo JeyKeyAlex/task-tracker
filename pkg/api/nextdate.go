@@ -3,6 +3,8 @@ package api
 import (
 	"errors"
 	"fmt"
+	"log"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -103,4 +105,29 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	}
 
 	return startDate.Format(constants.DataFormat), nil
+}
+
+func nextDayHandler(w http.ResponseWriter, r *http.Request) {
+
+	var nowDate time.Time
+	nowParam := r.URL.Query().Get("now")
+	if nowParam != "" {
+		var err error
+		nowDate, err = time.Parse(constants.DataFormat, nowParam)
+		if err != nil {
+			nowDate = time.Now()
+		}
+	} else {
+		nowDate = time.Now()
+	}
+	date := r.FormValue("date")
+	repeat := r.FormValue("repeat")
+
+	nextDate, err := NextDate(nowDate, date, repeat)
+	if err != nil {
+		log.Printf("Failed to run NextDate function: %v", err)
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(nextDate))
 }
