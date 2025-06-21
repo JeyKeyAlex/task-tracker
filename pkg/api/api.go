@@ -1,7 +1,10 @@
 package api
 
-import "net/http"
+import (
+	"github.com/go-chi/chi/v5"
+)
 
-func Init() {
-	http.HandleFunc("/api/nextdate", nextDayHandler)
+func Init(r chi.Router) {
+	r.Get("/api/nextdate", getNextDayHandler)
+	r.Post("/api/task", addTaskHandler)
 }

@@ -17,7 +17,7 @@ var weeksInterval int
 
 func checkSymbol(symbol string) bool {
 	switch symbol {
-	case constants.DaySign, constants.WeekSign, constants.MonthSign, constants.YearSign:
+	case constants.DaySign, constants.YearSign:
 		return true
 	default:
 		return false
@@ -45,7 +45,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		return "", err
 	}
 
-	if partsRepeat[0] == constants.DaySign || partsRepeat[0] == constants.WeekSign || partsRepeat[0] == constants.MonthSign {
+	if partsRepeat[0] == constants.DaySign {
 		if len(partsRepeat) < 2 {
 			err := fmt.Errorf("repeat parameter with first value %s can not consists of less than 2 elements", partsRepeat[0])
 			return "", err
@@ -68,20 +68,21 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			err := fmt.Errorf("%d: ivalid value for days", days)
 			return "", err
 		}
-	} else if partsRepeat[0] == constants.WeekSign {
-		weeks, err := strconv.Atoi(partsRepeat[1])
-		if err != nil {
-			err = fmt.Errorf("value %s can not convert to int", partsRepeat[1])
-			return "", err
-		}
-		weeksInterval = weeks
-		if weeksInterval > constants.WeeksMaxValue || weeksInterval < constants.WeeksMinValue {
-			err := fmt.Errorf("%d: ivalid value for weeks", weeks)
-			return "", err
-		}
 	}
+	//} else if partsRepeat[0] == constants.WeekSign {
+	//	weeks, err := strconv.Atoi(partsRepeat[1])
+	//	if err != nil {
+	//		err = fmt.Errorf("value %s can not convert to int", partsRepeat[1])
+	//		return "", err
+	//	}
+	//	weeksInterval = weeks
+	//	if weeksInterval > constants.WeeksMaxValue || weeksInterval < constants.WeeksMinValue {
+	//		err := fmt.Errorf("%d: ivalid value for weeks", weeks)
+	//		return "", err
+	//	}
+	//}
 
-	startDate, err := time.Parse(constants.DataFormat, dstart)
+	startDate, err := time.Parse(constants.DateFormat, dstart)
 	if err != nil {
 		err = fmt.Errorf("Failed to parse start date: %v", err)
 		return "", err
@@ -104,16 +105,16 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 	}
 
-	return startDate.Format(constants.DataFormat), nil
+	return startDate.Format(constants.DateFormat), nil
 }
 
-func nextDayHandler(w http.ResponseWriter, r *http.Request) {
+func getNextDayHandler(w http.ResponseWriter, r *http.Request) {
 
 	var nowDate time.Time
 	nowParam := r.URL.Query().Get("now")
 	if nowParam != "" {
 		var err error
-		nowDate, err = time.Parse(constants.DataFormat, nowParam)
+		nowDate, err = time.Parse(constants.DateFormat, nowParam)
 		if err != nil {
 			nowDate = time.Now()
 		}

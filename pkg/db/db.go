@@ -9,6 +9,15 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+var db *sql.DB
+
+func Close() error {
+	if db != nil {
+		return db.Close()
+	}
+	return nil
+}
+
 func Init(dbFile string) error {
 	_, err := os.Stat(dbFile)
 
@@ -17,11 +26,10 @@ func Init(dbFile string) error {
 		install = true
 	}
 
-	db, err := sql.Open("sqlite", dbFile)
+	db, err = sql.Open("sqlite", dbFile)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
-	defer db.Close()
 
 	if install {
 		if _, err = db.Exec(constants.Schema); err != nil {

@@ -12,10 +12,11 @@ const (
 
 			CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler(date);
 `
+	AddTaskQuery = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
 )
 
 const (
-	DataFormat    string = "20060102"
+	DateFormat    string = "20060102"
 	DaySign       string = "d"
 	MonthSign     string = "m"
 	WeekSign      string = "w"

@@ -1,12 +1,14 @@
 package main
 
 import (
-	"github.com/JKasus/go_final_project/pkg/api"
-	"github.com/JKasus/go_final_project/pkg/db"
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
+	"github.com/JKasus/go_final_project/pkg/api"
 	"github.com/JKasus/go_final_project/pkg/config"
+	"github.com/JKasus/go_final_project/pkg/db"
 )
 
 func main() {
@@ -15,9 +17,11 @@ func main() {
 	if err != nil {
 		log.Printf("Failed to init db: %v", err)
 	}
-	api.Init()
-	http.Handle("/", http.FileServer(http.Dir(cfg.WebDir)))
-	if err = http.ListenAndServe(cfg.Port, nil); err != nil {
+	defer db.Close()
+	r := chi.NewRouter()
+	api.Init(r)
+	r.Handle("/*", http.FileServer(http.Dir(cfg.WebDir)))
+	if err = http.ListenAndServe(cfg.Port, r); err != nil {
 		log.Printf("Failed to start server: %v", err)
 	}
 }
