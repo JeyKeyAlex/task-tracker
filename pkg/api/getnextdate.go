@@ -13,7 +13,8 @@ import (
 )
 
 var daysInterval int
-var weeksInterval int
+
+//var weeksInterval int
 
 func checkSymbol(symbol string) bool {
 	switch symbol {
