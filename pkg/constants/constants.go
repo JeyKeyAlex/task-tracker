@@ -12,7 +12,8 @@ const (
 
 			CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler(date);
 `
-	AddTaskQuery = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
+	QueryAddTask            = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
+	QueryGetTaskList string = `SELECT * FROM scheduler ORDER BY date ($1) LIMIT ($2) OFFSET ($3);`
 )
 
 const (
@@ -25,4 +26,7 @@ const (
 	DaysMaxValue  int    = 400
 	WeeksMinValue int    = 1
 	WeeksMaxValue int    = 7
+	SortASC       string = "ASC"
+	SortDESC      string = "DESC"
+	DefaultLimit  int64  = 10
 )

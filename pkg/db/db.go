@@ -3,8 +3,9 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"github.com/JKasus/go_final_project/pkg/constants"
 	"os"
+
+	"github.com/JKasus/go_final_project/pkg/constants"
 
 	_ "modernc.org/sqlite"
 )

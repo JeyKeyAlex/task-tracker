@@ -4,57 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"net/http"
-	"strconv"
-	"time"
-
-	"github.com/JKasus/go_final_project/pkg/constants"
 	"github.com/JKasus/go_final_project/pkg/db"
+	"github.com/JKasus/go_final_project/pkg/entities"
+	"net/http"
 )
 
-func writeJSON(w http.ResponseWriter, msg any) error {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusBadRequest)
-	resp := make(map[string]string)
-	switch v := msg.(type) {
-	case string:
-		resp["error"] = v
-	case int64:
-		resp["id"] = strconv.FormatInt(v, 10)
-	}
-	return json.NewEncoder(w).Encode(resp)
-}
-
-func checkDate(task *db.Task) error {
-	now := time.Now()
-	var next string
-	if task.Date == "" {
-		task.Date = now.Format(constants.DateFormat)
-	}
-	t, err := time.Parse("20060102", task.Date)
-	if err != nil {
-		err = errors.New("Invalid date: " + task.Date)
-		return err
-	}
-	if task.Repeat != "" {
-		next, err = NextDate(now, task.Date, task.Repeat)
-		if err != nil {
-			err = errors.New("Invalid repeat value: " + task.Repeat)
-			return err
-		}
-	}
-	if afterNow(now, t) {
-		if len(task.Repeat) == 0 || now.Format(constants.DateFormat) == t.Format(constants.DateFormat) {
-			task.Date = now.Format("20060102")
-		} else {
-			task.Date = next
-		}
-	}
-	return nil
-}
-
 func addTaskHandler(w http.ResponseWriter, r *http.Request) {
-	var task db.Task
+	var task entities.Task
 	var buf bytes.Buffer
 
 	_, err := buf.ReadFrom(r.Body)
