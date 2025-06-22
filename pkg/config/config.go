@@ -2,7 +2,7 @@ package config
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-envconfig"
@@ -17,7 +17,7 @@ type Config struct {
 func NewConfig() *Config {
 	// Загружаем переменные окружения из .env файла
 	if err := godotenv.Load(".env"); err != nil {
-		log.Println("Warning: .env file not found or couldn't be loaded")
+		fmt.Println("Warning: .env file not found or couldn't be loaded")
 	}
 
 	cfg := &Config{}
@@ -27,7 +27,7 @@ func NewConfig() *Config {
 
 	// Парсим переменные окружения в структуру Config
 	if err := envconfig.Process(ctx, cfg); err != nil {
-		log.Printf("Failed to parse env config: %v", err)
+		fmt.Printf("Failed to parse env config: %v", err)
 	}
 
 	return cfg

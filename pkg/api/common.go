@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/JKasus/go_final_project/pkg/constants"
-	"github.com/JKasus/go_final_project/pkg/entities"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/JKasus/go_final_project/pkg/constants"
+	"github.com/JKasus/go_final_project/pkg/entities"
 )
 
 var daysInterval int

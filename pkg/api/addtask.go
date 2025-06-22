@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/JKasus/go_final_project/pkg/db"
 	"github.com/JKasus/go_final_project/pkg/entities"
-	"net/http"
 )
 
 func addTaskHandler(w http.ResponseWriter, r *http.Request) {
