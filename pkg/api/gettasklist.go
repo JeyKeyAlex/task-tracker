@@ -9,7 +9,7 @@ import (
 	"github.com/JKasus/go_final_project/pkg/entities"
 )
 
-func gettasklisthandler(w http.ResponseWriter, r *http.Request) {
+func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 
 	var filter entities.Filter
 
