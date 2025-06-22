@@ -21,20 +21,13 @@ func Close() error {
 func Init(dbFile string) error {
 	_, err := os.Stat(dbFile)
 
-	var install bool
-	if err != nil {
-		install = true
-	}
-
 	db, err = sql.Open("sqlite", dbFile)
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
 
-	if install {
-		if _, err = db.Exec(constants.Schema); err != nil {
-			return fmt.Errorf("schema creation error: %w", err)
-		}
+	if _, err = db.Exec(constants.Schema); err != nil {
+		return fmt.Errorf("schema creation error: %w", err)
 	}
 
 	return nil

@@ -46,12 +46,12 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	}
 
 	if partsRepeat[0] == constants.DaySign {
-		if len(partsRepeat) < 2 {
+		if len(partsRepeat) != 2 {
 			err := fmt.Errorf("repeat parameter with first value %s can not consists of less than 2 elements", partsRepeat[0])
 			return "", err
 		}
 	} else if partsRepeat[0] == constants.YearSign {
-		if len(partsRepeat) > 1 {
+		if len(partsRepeat) != 1 {
 			err := fmt.Errorf("repeat parameter with first value %s can not consists of more than 1 element", partsRepeat[0])
 			return "", err
 		}

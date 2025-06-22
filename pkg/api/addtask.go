@@ -26,6 +26,19 @@ func writeJSONSuccess(w http.ResponseWriter, id string) {
 	json.NewEncoder(w).Encode(resp)
 }
 
+func writeJSON(w http.ResponseWriter, msg any) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusBadRequest)
+	resp := make(map[string]string)
+	switch v := msg.(type) {
+	case string:
+		resp["error"] = v
+	case int64:
+		resp["id"] = strconv.FormatInt(v, 10)
+	}
+	return json.NewEncoder(w).Encode(resp)
+}
+
 func checkDate(task *db.Task) error {
 	now := time.Now()
 	var next string
@@ -39,9 +52,13 @@ func checkDate(task *db.Task) error {
 	}
 	if task.Repeat != "" {
 		next, err = NextDate(now, task.Date, task.Repeat)
+		if err != nil {
+			err = errors.New("Invalid repeat value: " + task.Repeat)
+			return err
+		}
 	}
 	if afterNow(now, t) {
-		if len(task.Repeat) == 0 {
+		if len(task.Repeat) == 0 || now.Format(constants.DateFormat) == t.Format(constants.DateFormat) {
 			task.Date = now.Format("20060102")
 		} else {
 			task.Date = next
@@ -75,7 +92,7 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = checkDate(&task); err != nil {
-		err = errors.New("Invalid date: " + task.Date)
+		err = errors.New("checkDate failed: " + err.Error())
 		writeJSONError(w, err.Error())
 		return
 	}
