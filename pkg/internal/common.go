@@ -1,4 +1,4 @@
-package api
+package internal
 
 import (
 	"encoding/json"
@@ -17,7 +17,7 @@ var daysInterval int
 
 //var weeksInterval int
 
-func checkSymbol(symbol string) bool {
+func CheckSymbol(symbol string) bool {
 	switch symbol {
 	case constants.DaySign, constants.YearSign:
 		return true
@@ -38,7 +38,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		return "", err
 	}
 
-	if !checkSymbol(partsRepeat[0]) {
+	if !CheckSymbol(partsRepeat[0]) {
 		err := fmt.Errorf("value %s can not be used is the rule of repeating", partsRepeat[0])
 		return "", err
 	}
@@ -73,8 +73,8 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	//		err = fmt.Errorf("value %s can not convert to int", partsRepeat[1])
 	//		return "", err
 	//	}
-	//	weeksInterval = weeks
-	//	if weeksInterval > constants.WeeksMaxValue || weeksInterval < constants.WeeksMinValue {
+	//	WeeksInterval = weeks
+	//	if WeeksInterval > constants.WeeksMaxValue || WeeksInterval < constants.WeeksMinValue {
 	//		err := fmt.Errorf("%d: ivalid value for weeks", weeks)
 	//		return "", err
 	//	}
@@ -110,7 +110,7 @@ func afterNow(date time.Time, now time.Time) bool {
 	return date.After(now)
 }
 
-func checkDate(task *entities.Task) error {
+func CheckDate(task *entities.Task) error {
 	now := time.Now()
 	var next string
 	if task.Date == "" {
@@ -138,7 +138,7 @@ func checkDate(task *entities.Task) error {
 	return nil
 }
 
-func writeJSON(w http.ResponseWriter, msg any) {
+func WriteJSON(w http.ResponseWriter, msg any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	resp := make(map[string]interface{})
 	switch v := msg.(type) {

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/JKasus/go_final_project/pkg/constants"
+	"github.com/JKasus/go_final_project/pkg/internal"
 )
 
 func getNextDayHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,7 @@ func getNextDayHandler(w http.ResponseWriter, r *http.Request) {
 	date := r.FormValue("date")
 	repeat := r.FormValue("repeat")
 
-	nextDate, err := NextDate(nowDate, date, repeat)
+	nextDate, err := internal.NextDate(nowDate, date, repeat)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}

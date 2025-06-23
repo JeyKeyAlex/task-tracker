@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/joho/godotenv"
@@ -14,10 +15,11 @@ type Config struct {
 	DbFile string `env:"TODO_DBFILE,default=./pkg/db/scheduler.db"`
 }
 
-func NewConfig() *Config {
+func NewConfig() (*Config, error) {
 	// Загружаем переменные окружения из .env файла
 	if err := godotenv.Load(".env"); err != nil {
-		fmt.Println("Warning: .env file not found or couldn't be loaded")
+		err = errors.New("warning: .env file not found or couldn't be loaded")
+		return nil, err
 	}
 
 	cfg := &Config{}
@@ -27,8 +29,9 @@ func NewConfig() *Config {
 
 	// Парсим переменные окружения в структуру Config
 	if err := envconfig.Process(ctx, cfg); err != nil {
-		fmt.Printf("Failed to parse env config: %v", err)
+		err = fmt.Errorf("failed to parse env config: %v", err)
+		return nil, err
 	}
 
-	return cfg
+	return cfg, nil
 }
