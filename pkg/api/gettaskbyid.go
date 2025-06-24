@@ -9,19 +9,19 @@ import (
 )
 
 func getTaskByIdHandler(w http.ResponseWriter, r *http.Request) {
-
-	var task entities.Task
+	var task *entities.Task
+	var err error
 
 	if idParam := r.URL.Query().Get("id"); idParam != "" {
-		task.ID = idParam
+		task, err = db.GetTaskById(idParam)
+		if err != nil {
+			writeJSON(w, err.Error())
+			return
+		}
 	} else {
-		err := errors.New("id param is required")
+		err = errors.New("id param is required")
 		writeJSON(w, err.Error())
-	}
-
-	task, err := db.GetTaskById(task.ID)
-	if err != nil {
-		writeJSON(w, err.Error())
+		return
 	}
 
 	writeJSON(w, task)

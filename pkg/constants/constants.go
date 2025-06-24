@@ -15,6 +15,13 @@ const (
 	QueryAddTask            = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
 	QueryGetTaskList string = `SELECT * FROM scheduler ORDER BY date ($1) LIMIT ($2) OFFSET ($3);`
 	QueryGetTaskById string = `SELECT * FROM scheduler WHERE id = $1;`
+	QueryUpdateTask         = `UPDATE scheduler 
+							   SET
+ 								  date = COALESCE(NULLIF($2, ''), date),
+ 								  title = COALESCE(NULLIF($3, ''), title), 
+ 								  comment = COALESCE($4, comment),
+ 								  repeat = COALESCE(NULLIF($5, ''), repeat)
+ 							   WHERE id = $1`
 )
 
 const (

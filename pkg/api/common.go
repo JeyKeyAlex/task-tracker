@@ -23,7 +23,7 @@ func writeJSON(w http.ResponseWriter, msg any) {
 	case []entities.Task:
 		statusCode = http.StatusOK
 		resp = map[string]interface{}{"tasks": v}
-	case entities.Task:
+	case *entities.Task:
 		statusCode = http.StatusOK
 		resp = v
 	default:

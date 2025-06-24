@@ -42,21 +42,44 @@ func GetTaskList(filter *entities.Filter) ([]entities.Task, error) {
 	return tasks, nil
 }
 
-func GetTaskById(id string) (entities.Task, error) {
+func GetTaskById(id string) (*entities.Task, error) {
 	taskId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		err = errors.New("failed to parse task id")
-		return entities.Task{}, err
+		return nil, err
 	}
 
 	var task entities.Task
 	err = db.QueryRow(constants.QueryGetTaskById, taskId).Scan(&taskId, &task.Date, &task.Title, &task.Comment, &task.Repeat)
 	if err != nil {
 		err = fmt.Errorf("failed to db.GetTaskBy: %s", err.Error())
-		return entities.Task{}, err
+		return nil, err
 	}
 
 	task.ID = strconv.Itoa(int(taskId))
 
-	return task, nil
+	return &task, nil
+}
+
+func UpdateTask(task *entities.Task) error {
+	taskId, err := strconv.ParseInt(task.ID, 10, 64)
+	if err != nil {
+		err = errors.New("failed to parse task id")
+		return err
+	}
+
+	res, err := db.Exec(constants.QueryUpdateTask, taskId, task.Date, task.Title, task.Comment, task.Repeat)
+	if err != nil {
+		return err
+	}
+	// метод RowsAffected() возвращает количество записей к которым
+	// был применена SQL команда
+	count, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return fmt.Errorf(`incorrect id for updating task`)
+	}
+	return nil
 }
