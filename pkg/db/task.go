@@ -16,13 +16,11 @@ func AddTask(task *entities.Task) (int64, error) {
 	return id, err
 }
 
-func GetTaskList(limit, offset int64) ([]entities.Task, error) {
-	if limit == 0 {
-		limit = constants.DefaultLimit
-	}
-	rows, err := db.Query(constants.QueryGetTaskList, constants.SortASC, limit, offset)
+func GetTaskList(filter *entities.Filter) ([]entities.Task, error) {
+
+	rows, err := db.Query(constants.QueryGetTaskList, constants.SortASC, filter.Limit, filter.Offset)
 	if err != nil {
-		err = fmt.Errorf("Failed to db.GetTaskList: %s", err.Error())
+		err = fmt.Errorf("failed to db.GetTaskList: %s", err.Error())
 		return nil, err
 	}
 	defer rows.Close()
@@ -33,7 +31,7 @@ func GetTaskList(limit, offset int64) ([]entities.Task, error) {
 		var task entities.Task
 		err = rows.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat)
 		if err != nil {
-			err = fmt.Errorf("Failed to Scan rows in Task entity: %s", err.Error())
+			err = fmt.Errorf("failed to Scan rows in Task entity: %s", err.Error())
 			return nil, err
 		}
 		tasks = append(tasks, task)

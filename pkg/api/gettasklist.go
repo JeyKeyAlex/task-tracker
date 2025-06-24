@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	"github.com/JKasus/go_final_project/pkg/internal"
+	"github.com/JKasus/go_final_project/pkg/constants"
 	"net/http"
 	"strconv"
 
@@ -18,30 +18,35 @@ func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 		limit, err := strconv.ParseInt(limitParam, 10, 64)
 		if err != nil {
 			err = errors.New("failed to parse 'limit' parameter")
-			internal.WriteJSON(w, err.Error())
+			writeJSON(w, err.Error())
 			return
 		}
 		filter.Limit = limit
 	}
+
+	if filter.Limit == 0 {
+		filter.Limit = constants.DefaultLimit
+	}
+
 	if offsetParam := r.URL.Query().Get("offset"); offsetParam != "" {
 		offset, err := strconv.ParseInt(offsetParam, 10, 64)
 		if err != nil {
 			err = errors.New("failed to parse 'offset' parameter")
-			internal.WriteJSON(w, err.Error())
+			writeJSON(w, err.Error())
 			return
 		}
 		filter.Offset = offset
 	}
 
-	taskList, err := db.GetTaskList(filter.Limit, filter.Offset)
+	taskList, err := db.GetTaskList(&filter)
 	if err != nil {
-		internal.WriteJSON(w, err.Error())
+		writeJSON(w, err.Error())
 		return
 	}
 
 	if taskList == nil {
-		internal.WriteJSON(w, []entities.Task{})
+		writeJSON(w, []entities.Task{})
 	} else {
-		internal.WriteJSON(w, taskList)
+		writeJSON(w, taskList)
 	}
 }

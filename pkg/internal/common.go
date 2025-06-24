@@ -1,10 +1,8 @@
 package internal
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -17,7 +15,11 @@ var daysInterval int
 
 //var weeksInterval int
 
-func CheckSymbol(symbol string) bool {
+func afterNow(date time.Time, now time.Time) bool {
+	return date.After(now)
+}
+
+func checkSymbol(symbol string) bool {
 	switch symbol {
 	case constants.DaySign, constants.YearSign:
 		return true
@@ -38,7 +40,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		return "", err
 	}
 
-	if !CheckSymbol(partsRepeat[0]) {
+	if !checkSymbol(partsRepeat[0]) {
 		err := fmt.Errorf("value %s can not be used is the rule of repeating", partsRepeat[0])
 		return "", err
 	}
@@ -106,10 +108,6 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	return startDate.Format(constants.DateFormat), nil
 }
 
-func afterNow(date time.Time, now time.Time) bool {
-	return date.After(now)
-}
-
 func CheckDate(task *entities.Task) error {
 	now := time.Now()
 	var next string
@@ -136,24 +134,4 @@ func CheckDate(task *entities.Task) error {
 		}
 	}
 	return nil
-}
-
-func WriteJSON(w http.ResponseWriter, msg any) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	resp := make(map[string]interface{})
-	switch v := msg.(type) {
-	case string:
-		w.WriteHeader(http.StatusBadRequest)
-		resp["error"] = v
-	case int64:
-		w.WriteHeader(http.StatusOK)
-		resp["id"] = strconv.FormatInt(v, 10)
-	case []entities.Task:
-		w.WriteHeader(http.StatusOK)
-		resp["tasks"] = v
-	default:
-		w.WriteHeader(http.StatusBadRequest)
-		resp["error"] = "invalid type of message"
-	}
-	json.NewEncoder(w).Encode(resp)
 }

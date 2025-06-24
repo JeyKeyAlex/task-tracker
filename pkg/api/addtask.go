@@ -18,35 +18,35 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	_, err := buf.ReadFrom(r.Body)
 	if err != nil {
 		err = errors.New("Error reading body: " + err.Error())
-		internal.WriteJSON(w, err.Error())
+		writeJSON(w, err.Error())
 		return
 	}
 
 	err = json.Unmarshal(buf.Bytes(), &task)
 	if err != nil {
 		err = errors.New("Error unmarshalling body: " + err.Error())
-		internal.WriteJSON(w, err.Error())
+		writeJSON(w, err.Error())
 		return
 	}
 
 	if task.Title == "" {
 		err = errors.New("title is required")
-		internal.WriteJSON(w, err.Error())
+		writeJSON(w, err.Error())
 		return
 	}
 
 	if err = internal.CheckDate(&task); err != nil {
 		err = errors.New("checkDate failed: " + err.Error())
-		internal.WriteJSON(w, err.Error())
+		writeJSON(w, err.Error())
 		return
 	}
 
 	taskId, err := db.AddTask(&task)
 	if err != nil {
 		err = errors.New("Error adding task: " + err.Error())
-		internal.WriteJSON(w, err.Error())
+		writeJSON(w, err.Error())
 		return
 	}
 
-	internal.WriteJSON(w, taskId)
+	writeJSON(w, taskId)
 }
