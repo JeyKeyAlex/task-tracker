@@ -84,7 +84,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 
 	startDate, err := time.Parse(constants.DateFormat, dstart)
 	if err != nil {
-		err = fmt.Errorf("Failed to parse start date: %v", err)
+		err = fmt.Errorf("failed to parse start date: %v", err)
 		return "", err
 	}
 
@@ -116,13 +116,13 @@ func CheckDate(task *entities.Task) error {
 	}
 	t, err := time.Parse("20060102", task.Date)
 	if err != nil {
-		err = errors.New("Invalid date: " + task.Date)
+		err = errors.New("invalid date: " + task.Date)
 		return err
 	}
 	if task.Repeat != "" {
 		next, err = NextDate(now, task.Date, task.Repeat)
 		if err != nil {
-			err = errors.New("Invalid repeat value: " + task.Repeat)
+			err = errors.New("invalid repeat value: " + task.Repeat)
 			return err
 		}
 	}
