@@ -14,6 +14,7 @@ const (
 `
 	QueryAddTask            = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
 	QueryGetTaskList string = `SELECT * FROM scheduler ORDER BY date ($1) LIMIT ($2) OFFSET ($3);`
+	QueryGetTaskById string = `SELECT * FROM scheduler WHERE id = $1;`
 )
 
 const (

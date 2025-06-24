@@ -1,7 +1,9 @@
 package db
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/JKasus/go_final_project/pkg/constants"
 	"github.com/JKasus/go_final_project/pkg/entities"
@@ -38,4 +40,23 @@ func GetTaskList(filter *entities.Filter) ([]entities.Task, error) {
 	}
 
 	return tasks, nil
+}
+
+func GetTaskById(id string) (entities.Task, error) {
+	taskId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		err = errors.New("failed to parse task id")
+		return entities.Task{}, err
+	}
+
+	var task entities.Task
+	err = db.QueryRow(constants.QueryGetTaskById, taskId).Scan(&taskId, &task.Date, &task.Title, &task.Comment, &task.Repeat)
+	if err != nil {
+		err = fmt.Errorf("failed to db.GetTaskBy: %s", err.Error())
+		return entities.Task{}, err
+	}
+
+	task.ID = strconv.Itoa(int(taskId))
+
+	return task, nil
 }
