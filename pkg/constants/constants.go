@@ -22,6 +22,7 @@ const (
  								  comment = COALESCE($4, comment),
  								  repeat = COALESCE(NULLIF($5, ''), repeat)
  							   WHERE id = $1`
+	QueryDeleteTask string = `DELETE FROM scheduler WHERE id = $1`
 )
 
 const (

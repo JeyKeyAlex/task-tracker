@@ -3,8 +3,6 @@ package config
 import (
 	"context"
 	"errors"
-	"fmt"
-
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-envconfig"
 )
@@ -24,12 +22,12 @@ func NewConfig() (*Config, error) {
 
 	cfg := &Config{}
 
-	// Создаем контекст
+	// Создаем пустой контекст, т.к. этого требует парсер envconfig.Process
 	ctx := context.Background()
 
 	// Парсим переменные окружения в структуру Config
 	if err := envconfig.Process(ctx, cfg); err != nil {
-		err = fmt.Errorf("failed to parse env config: %v", err)
+		err = errors.New("failed to parse env config: " + err.Error())
 		return nil, err
 	}
 

@@ -18,7 +18,7 @@ func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 		limit, err := strconv.ParseInt(limitParam, 10, 64)
 		if err != nil {
 			err = errors.New("failed to parse 'limit' parameter")
-			writeJSON(w, err.Error())
+			writeJSON(w, err)
 			return
 		}
 		filter.Limit = limit
@@ -32,7 +32,7 @@ func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 		offset, err := strconv.ParseInt(offsetParam, 10, 64)
 		if err != nil {
 			err = errors.New("failed to parse 'offset' parameter")
-			writeJSON(w, err.Error())
+			writeJSON(w, err)
 			return
 		}
 		filter.Offset = offset
@@ -40,7 +40,7 @@ func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 
 	taskList, err := db.GetTaskList(&filter)
 	if err != nil {
-		writeJSON(w, err.Error())
+		writeJSON(w, err)
 		return
 	}
 

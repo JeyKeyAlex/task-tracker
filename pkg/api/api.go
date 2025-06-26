@@ -10,4 +10,6 @@ func Init(r chi.Router) {
 	r.Get("/api/tasks", getTaskListHandler)
 	r.Get("/api/task", getTaskByIdHandler)
 	r.Put("/api/task", updateTaskHandler)
+	r.Delete("/api/task", deleteTaskHandler)
+	r.Post("/api/task/done", CompleteTaskHandler)
 }

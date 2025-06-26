@@ -84,7 +84,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 
 	startDate, err := time.Parse(constants.DateFormat, dstart)
 	if err != nil {
-		err = fmt.Errorf("failed to parse start date: %v", err)
+		err = errors.New("failed to parse start date: " + err.Error())
 		return "", err
 	}
 

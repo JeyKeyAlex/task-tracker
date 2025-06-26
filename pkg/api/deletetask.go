@@ -2,18 +2,16 @@ package api
 
 import (
 	"errors"
-	"net/http"
-
 	"github.com/JKasus/go_final_project/pkg/db"
 	"github.com/JKasus/go_final_project/pkg/entities"
+	"net/http"
 )
 
-func getTaskByIdHandler(w http.ResponseWriter, r *http.Request) {
-	var task *entities.Task
+func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	if idParam := r.URL.Query().Get("id"); idParam != "" {
-		task, err = db.GetTaskById(idParam)
+		err = db.DeleteTask(idParam)
 		if err != nil {
 			writeJSON(w, err)
 			return
@@ -24,5 +22,5 @@ func getTaskByIdHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, task)
+	writeJSON(w, entities.EmptyResponse{})
 }

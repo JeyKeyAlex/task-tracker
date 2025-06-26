@@ -14,19 +14,19 @@ import (
 func main() {
 	cfg, err := config.NewConfig()
 	if err != nil {
-		log.Fatalf("Failed to load config: %v", err)
+		log.Fatalf("failed to load config: %v", err)
 	}
 	err = db.Init(cfg.DbFile)
 	if err != nil {
-		log.Fatalf("Failed to init db: %v", err)
+		log.Fatalf("failed to init db: %v", err)
 	}
-	log.Println("Database initialized")
+	log.Println("database initialized")
 	defer db.Close()
 	r := chi.NewRouter()
 	api.Init(r)
 	r.Handle("/*", http.FileServer(http.Dir(cfg.WebDir)))
-	log.Println("Starting server on %s", cfg.Port)
+	log.Println("starting server on %s", cfg.Port)
 	if err = http.ListenAndServe(cfg.Port, r); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+		log.Fatalf("failed to start server: %v", err)
 	}
 }

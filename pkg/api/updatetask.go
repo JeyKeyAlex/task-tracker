@@ -12,43 +12,41 @@ import (
 )
 
 func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
-	var task entities.Task
+	var task *entities.Task
 	var buf bytes.Buffer
 
 	_, err := buf.ReadFrom(r.Body)
 	if err != nil {
 		err = errors.New("Error reading body: " + err.Error())
-		writeJSON(w, err.Error())
+		writeJSON(w, err)
 		return
 	}
 
 	err = json.Unmarshal(buf.Bytes(), &task)
 	if err != nil {
 		err = errors.New("Error unmarshalling body: " + err.Error())
-		writeJSON(w, err.Error())
+		writeJSON(w, err)
 		return
 	}
 
 	if task.Title == "" {
 		err = errors.New("title is required")
-		writeJSON(w, err.Error())
+		writeJSON(w, err)
 		return
 	}
 
-	if err = internal.CheckDate(&task); err != nil {
+	if err = internal.CheckDate(task); err != nil {
 		err = errors.New("checkDate failed: " + err.Error())
-		writeJSON(w, err.Error())
+		writeJSON(w, err)
 		return
 	}
 
-	err = db.UpdateTask(&task)
+	err = db.UpdateTask(task)
 	if err != nil {
 		err = errors.New("Error adding task: " + err.Error())
-		writeJSON(w, err.Error())
+		writeJSON(w, err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{})
+	writeJSON(w, entities.EmptyResponse{})
 }

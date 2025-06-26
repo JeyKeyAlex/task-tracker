@@ -11,3 +11,4 @@ type Filter struct {
 	Limit  int64
 	Offset int64
 }
+type EmptyResponse struct{}

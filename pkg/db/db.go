@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
+	"errors"
 	"os"
 
 	"github.com/JKasus/go_final_project/pkg/constants"
@@ -24,11 +24,11 @@ func Init(dbFile string) error {
 
 	db, err = sql.Open("sqlite", dbFile)
 	if err != nil {
-		return fmt.Errorf("error opening database: %w", err)
+		return errors.New("error opening database: " + err.Error())
 	}
 
 	if _, err = db.Exec(constants.Schema); err != nil {
-		return fmt.Errorf("schema creation error: %w", err)
+		return errors.New("schema creating error: " + err.Error())
 	}
 
 	return nil

@@ -14,9 +14,12 @@ func writeJSON(w http.ResponseWriter, msg any) {
 	var statusCode int
 
 	switch v := msg.(type) {
-	case string:
+	case error:
 		statusCode = http.StatusBadRequest
-		resp = map[string]interface{}{"error": v}
+		resp = map[string]interface{}{"error": v.Error()}
+	case string:
+		statusCode = http.StatusOK
+		resp = map[string]interface{}{"nextDate": v}
 	case int64:
 		statusCode = http.StatusOK
 		resp = map[string]interface{}{"id": strconv.FormatInt(v, 10)}
@@ -24,6 +27,9 @@ func writeJSON(w http.ResponseWriter, msg any) {
 		statusCode = http.StatusOK
 		resp = map[string]interface{}{"tasks": v}
 	case *entities.Task:
+		statusCode = http.StatusOK
+		resp = v
+	case entities.EmptyResponse:
 		statusCode = http.StatusOK
 		resp = v
 	default:
