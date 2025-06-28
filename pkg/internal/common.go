@@ -128,7 +128,7 @@ func CheckDate(task *entities.Task) error {
 	}
 	if afterNow(now, t) {
 		if len(task.Repeat) == 0 || now.Format(constants.DateFormat) == t.Format(constants.DateFormat) {
-			task.Date = now.Format("20060102")
+			task.Date = now.Format(constants.DateFormat)
 		} else {
 			task.Date = next
 		}

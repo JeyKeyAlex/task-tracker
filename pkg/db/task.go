@@ -31,7 +31,7 @@ func GetTaskList(filter *entities.Filter) ([]entities.Task, error) {
 	for rows.Next() {
 		var task entities.Task
 		err = rows.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat)
-		if err != nil {
+		if err = rows.Err(); err != nil {
 			err = errors.New("failed to Scan rows in Task entity: " + err.Error())
 			return nil, err
 		}
