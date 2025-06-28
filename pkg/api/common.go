@@ -2,9 +2,10 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/JKasus/go_final_project/pkg/entities"
 	"net/http"
 	"strconv"
+
+	"github.com/JKasus/go_final_project/pkg/entities"
 )
 
 func writeJSON(w http.ResponseWriter, statusCode int, msg any) {

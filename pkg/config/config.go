@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"errors"
+
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-envconfig"
 )

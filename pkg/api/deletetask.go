@@ -2,9 +2,10 @@ package api
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/JKasus/go_final_project/pkg/db"
 	"github.com/JKasus/go_final_project/pkg/entities"
-	"net/http"
 )
 
 func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {

@@ -2,11 +2,12 @@ package api
 
 import (
 	"errors"
+	"net/http"
+	"time"
+
 	"github.com/JKasus/go_final_project/pkg/db"
 	"github.com/JKasus/go_final_project/pkg/entities"
 	"github.com/JKasus/go_final_project/pkg/internal"
-	"net/http"
-	"time"
 )
 
 func CompleteTaskHandler(w http.ResponseWriter, r *http.Request) {
