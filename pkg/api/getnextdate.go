@@ -25,7 +25,7 @@ func getNextDayHandler(w http.ResponseWriter, r *http.Request) {
 
 	nextDate, err := internal.NextDate(nowDate, date, repeat)
 	if err != nil {
-		writeJSON(w, err)
+		writeJSON(w, http.StatusBadRequest, err)
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)

@@ -7,37 +7,29 @@ import (
 	"strconv"
 )
 
-func writeJSON(w http.ResponseWriter, msg any) {
+func writeJSON(w http.ResponseWriter, statusCode int, msg any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(statusCode)
 
 	var resp any
-	var statusCode int
 
 	switch v := msg.(type) {
 	case error:
-		statusCode = http.StatusBadRequest
 		resp = map[string]interface{}{"error": v.Error()}
 	case string:
-		statusCode = http.StatusOK
 		resp = map[string]interface{}{"nextDate": v}
 	case int64:
-		statusCode = http.StatusOK
 		resp = map[string]interface{}{"id": strconv.FormatInt(v, 10)}
 	case []entities.Task:
-		statusCode = http.StatusOK
 		resp = map[string]interface{}{"tasks": v}
 	case *entities.Task:
-		statusCode = http.StatusOK
 		resp = v
 	case entities.EmptyResponse:
-		statusCode = http.StatusOK
 		resp = v
 	default:
-		statusCode = http.StatusBadRequest
 		resp = map[string]interface{}{"error": "invalid type of message"}
 	}
 
-	w.WriteHeader(statusCode)
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

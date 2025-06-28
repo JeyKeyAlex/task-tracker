@@ -13,14 +13,14 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	if idParam := r.URL.Query().Get("id"); idParam != "" {
 		err = db.DeleteTask(idParam)
 		if err != nil {
-			writeJSON(w, err)
+			writeJSON(w, http.StatusBadRequest, err)
 			return
 		}
 	} else {
 		err = errors.New("id param is required")
-		writeJSON(w, err)
+		writeJSON(w, http.StatusBadRequest, err)
 		return
 	}
 
-	writeJSON(w, entities.EmptyResponse{})
+	writeJSON(w, http.StatusOK, entities.EmptyResponse{})
 }

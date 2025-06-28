@@ -15,14 +15,14 @@ func getTaskByIdHandler(w http.ResponseWriter, r *http.Request) {
 	if idParam := r.URL.Query().Get("id"); idParam != "" {
 		task, err = db.GetTaskById(idParam)
 		if err != nil {
-			writeJSON(w, err)
+			writeJSON(w, http.StatusBadRequest, err)
 			return
 		}
 	} else {
 		err = errors.New("id param is required")
-		writeJSON(w, err)
+		writeJSON(w, http.StatusBadRequest, err)
 		return
 	}
 
-	writeJSON(w, task)
+	writeJSON(w, http.StatusOK, task)
 }
