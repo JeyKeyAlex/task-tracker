@@ -12,10 +12,11 @@ const (
 
 			CREATE INDEX IF NOT EXISTS idx_scheduler_date ON scheduler(date);
 `
-	QueryAddTask            = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
-	QueryGetTaskList string = `SELECT * FROM scheduler ORDER BY date ($1) LIMIT ($2) OFFSET ($3);`
-	QueryGetTaskById string = `SELECT * FROM scheduler WHERE id = $1;`
-	QueryUpdateTask         = `UPDATE scheduler 
+	QueryAddTask                          = `INSERT INTO scheduler (date, title, comment, repeat) VALUES ($1, $2, $3, $4);`
+	QueryGetTaskListWithTaskFilter string = `SELECT * FROM scheduler WHERE title LIKE ($1) OR comment LIKE ($1) ORDER BY date ($2) LIMIT ($3) OFFSET ($4);`
+	QueryGetTaskListWithDateFilter string = `SELECT * FROM scheduler WHERE date = ($1) LIMIT ($2) OFFSET ($3);`
+	QueryGetTaskById               string = `SELECT * FROM scheduler WHERE id = $1;`
+	QueryUpdateTask                       = `UPDATE scheduler 
 							   SET
  								  date = COALESCE(NULLIF($2, ''), date),
  								  title = COALESCE(NULLIF($3, ''), title), 

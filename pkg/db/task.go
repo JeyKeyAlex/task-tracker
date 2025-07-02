@@ -1,8 +1,10 @@
 package db
 
 import (
+	"database/sql"
 	"errors"
 	"strconv"
+	"time"
 
 	"github.com/JKasus/go_final_project/pkg/constants"
 	"github.com/JKasus/go_final_project/pkg/entities"
@@ -17,13 +19,25 @@ func AddTask(task *entities.Task) (int64, error) {
 	return id, err
 }
 
-func GetTaskList(filter *entities.Filter) ([]entities.Task, error) {
+func GetTaskList(filter *entities.Filter, searchValue string) ([]entities.Task, error) {
+	var rows *sql.Rows
 
-	rows, err := db.Query(constants.QueryGetTaskList, constants.SortASC, filter.Limit, filter.Offset)
+	_, err := time.Parse(constants.DateFormat, searchValue)
 	if err != nil {
-		err = errors.New("failed to db.GetTaskList: " + err.Error())
-		return nil, err
+		likePattern := "%" + searchValue + "%"
+		rows, err = db.Query(constants.QueryGetTaskListWithTaskFilter, likePattern, constants.SortASC, filter.Limit, filter.Offset)
+		if err != nil {
+			err = errors.New("failed to db.GetTaskList: " + err.Error())
+			return nil, err
+		}
+	} else {
+		rows, err = db.Query(constants.QueryGetTaskListWithDateFilter, searchValue, filter.Limit, filter.Offset)
+		if err != nil {
+			err = errors.New("failed to db.GetTaskList: " + err.Error())
+			return nil, err
+		}
 	}
+
 	defer rows.Close()
 
 	var tasks []entities.Task
@@ -31,11 +45,15 @@ func GetTaskList(filter *entities.Filter) ([]entities.Task, error) {
 	for rows.Next() {
 		var task entities.Task
 		err = rows.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat)
-		if err = rows.Err(); err != nil {
+		if err != nil {
 			err = errors.New("failed to Scan rows in Task entity: " + err.Error())
 			return nil, err
 		}
 		tasks = append(tasks, task)
+	}
+	if err = rows.Err(); err != nil {
+		err = errors.New("failed during rows iteration: " + err.Error())
+		return nil, err
 	}
 
 	return tasks, nil

@@ -114,7 +114,7 @@ func CheckDate(task *entities.Task) error {
 	if task.Date == "" {
 		task.Date = now.Format(constants.DateFormat)
 	}
-	t, err := time.Parse("20060102", task.Date)
+	t, err := time.Parse(constants.DateFormat, task.Date)
 	if err != nil {
 		err = errors.New("invalid date: " + task.Date)
 		return err

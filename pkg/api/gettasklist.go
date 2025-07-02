@@ -13,6 +13,7 @@ import (
 func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 
 	var filter entities.Filter
+	var searchValue string
 	filter.Limit = constants.DefaultLimit
 
 	if offsetParam := r.URL.Query().Get("offset"); offsetParam != "" {
@@ -25,7 +26,11 @@ func getTaskListHandler(w http.ResponseWriter, r *http.Request) {
 		filter.Offset = offset
 	}
 
-	taskList, err := db.GetTaskList(&filter)
+	if searchParam := r.URL.Query().Get("search"); searchParam != "" {
+		searchValue = searchParam
+	}
+
+	taskList, err := db.GetTaskList(&filter, searchValue)
 	if err != nil {
 		writeJSON(w, http.StatusBadRequest, err)
 		return
