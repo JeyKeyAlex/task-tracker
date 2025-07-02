@@ -10,7 +10,7 @@ import (
 	"github.com/JKasus/go_final_project/pkg/internal"
 )
 
-func CompleteTaskHandler(w http.ResponseWriter, r *http.Request) {
+func completeTaskHandler(w http.ResponseWriter, r *http.Request) {
 	var task *entities.Task
 	var err error
 	var id string

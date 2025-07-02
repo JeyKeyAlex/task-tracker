@@ -6,10 +6,11 @@ import (
 
 func Init(r chi.Router) {
 	r.Get("/api/nextdate", getNextDayHandler)
-	r.Post("/api/task", addTaskHandler)
-	r.Get("/api/tasks", getTaskListHandler)
-	r.Get("/api/task", getTaskByIdHandler)
-	r.Put("/api/task", updateTaskHandler)
-	r.Delete("/api/task", deleteTaskHandler)
-	r.Post("/api/task/done", CompleteTaskHandler)
+	r.With(auth).Post("/api/task", addTaskHandler)
+	r.With(auth).Get("/api/tasks", getTaskListHandler)
+	r.With(auth).Get("/api/task", getTaskByIdHandler)
+	r.With(auth).Put("/api/task", updateTaskHandler)
+	r.With(auth).Delete("/api/task", deleteTaskHandler)
+	r.With(auth).Post("/api/task/done", completeTaskHandler)
+	r.Post("/api/signin", checkUser)
 }

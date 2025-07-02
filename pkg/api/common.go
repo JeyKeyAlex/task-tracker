@@ -27,6 +27,8 @@ func writeJSON(w http.ResponseWriter, statusCode int, msg any) {
 		resp = v
 	case entities.EmptyResponse:
 		resp = v
+	case *entities.UserData:
+		resp = map[string]interface{}{"token": v.Token}
 	default:
 		resp = map[string]interface{}{"error": "invalid type of message"}
 	}

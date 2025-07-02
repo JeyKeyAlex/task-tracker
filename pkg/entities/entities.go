@@ -12,3 +12,8 @@ type Filter struct {
 	Offset int64
 }
 type EmptyResponse struct{}
+
+type UserData struct {
+	Password string  `json:"password"`
+	Token    *string `json:"token"`
+}

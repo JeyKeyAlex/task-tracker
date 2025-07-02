@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	WebDir string `env:"TODO_WEB_DIR,default=./web"`
-	Port   string `env:"TODO_PORT,default=:7540"`
-	DbFile string `env:"TODO_DBFILE,default=./pkg/db/scheduler.db"`
+	WebDir   string `env:"TODO_WEB_DIR,default=./web"`
+	Port     string `env:"TODO_PORT,default=:7540"`
+	DbFile   string `env:"TODO_DBFILE,default=./pkg/db/scheduler.db"`
+	Password string `env:"TODO_PASSWORD,default=12345"`
 }
 
 func NewConfig() (*Config, error) {
