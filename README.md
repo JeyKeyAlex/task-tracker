@@ -61,4 +61,5 @@
 В директории tests находятся тесты для проверки API, которое должно быть реализовано в веб-сервере. Директория web содержит файлы фронтенда. В директории .github\workflows содержатся описания пайплайнов запуска тестов и деполя приложения для механизма Github Actions.
 
 # Стек
-golang  sqlite  docker  git
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" width="30"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/sqlite/sqlite-original.svg" width="30"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" width="30"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/git/git-original.svg" width="30">
+
