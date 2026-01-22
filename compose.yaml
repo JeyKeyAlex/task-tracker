@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "7540:7540"
+    volumes:
+      # Монтируем файл базы данных SQLite
+      - ./scheduler.db:/app/scheduler.db
+      # Опционально: монтируем web директорию для разработки
+      # - ./web:/app/web
+    environment:
+      TODO_PORT: ":7540"
+      TODO_DBFILE: "./scheduler.db"
+      TODO_WEB_DIR: "./web"
+      TODO_PASSWORD: "12345"
+    restart: unless-stopped
