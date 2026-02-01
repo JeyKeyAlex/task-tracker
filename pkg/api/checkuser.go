@@ -47,26 +47,6 @@ func checkUser(w http.ResponseWriter, r *http.Request) {
 
 		userData.Token = &signedToken
 		writeJSON(w, http.StatusOK, &userData)
-
-		//// второй аргумент — функция, которая просто возвращает секретный ключ
-		//// чтобы было понятней, мысленно вместо функции подставьте возвращаемое значение
-		//jwtToken, err = jwt.Parse(signedToken, func(t *jwt.Token) (interface{}, error) {
-		//	// секретный ключ для всех токенов одинаковый, поэтому просто возвращаем его
-		//	return pass, nil
-		//})
-		//if err != nil {
-		//	err = errors.New("Failed to parse token: " + err.Error())
-		//	writeJSON(w, http.StatusInternalServerError, err)
-		//	return
-		//}
-		//if jwtToken.Valid {
-		//	userData.Token = &signedToken
-		//	writeJSON(w, http.StatusOK, &userData)
-		//} else {
-		//	err = errors.New("Invalid token: " + err.Error())
-		//	writeJSON(w, http.StatusInternalServerError, err)
-		//	return
-		//}
 	} else {
 		err = errors.New("Error verifying token: " + err.Error())
 		writeJSON(w, http.StatusUnauthorized, err)
